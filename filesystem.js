@@ -28,8 +28,15 @@ window.FileSystem = (function(navigator, Promise) {
 		.catch(reject);
 	};
 
+	FileSystem.prototype.getRoot = function() {
+		var self = this;
+		return this.then(function(fs) {
+			return self.__modifyEntryInterface__(fs.root);
+		});
+	};
+
 	var resolveURL = window.resolveLocalFileSystemURL || window.webkitResolveLocalFileSystemURL;
-	FileSystem.prototype.resolveURL = function(url) {
+	FileSystem.prototype.getURL = function(url) {
 		var self = this;
 		return this.then(function(fs) {
 			var rootURL = fs.root.toURL();
@@ -191,12 +198,19 @@ window.FileSystem = (function(navigator, Promise) {
 		});
 	};
 
-	File.prototype.__read__ = function(func) {
+	File.prototype.__read__ = function(cache, func) {
 		var self = this;
 		return new Promise(function(resolve, reject) {
+			if (typeof self[cache] !== 'undefined') {
+				return resolve(self[cache]);
+			}
+
 			var reader = new FileReader();
 
-			reader.onload = resolve;
+			reader.onload = function(data) {
+				self[cache] = data;
+				resolve(data);
+			};
 			reader.onerror = reject;
 
 			func.call(self, reader);
@@ -206,21 +220,21 @@ window.FileSystem = (function(navigator, Promise) {
 	};
 
 	File.prototype.readAsDataURL = function() {
-		return this.__read__(function(reader) {
+		return this.__read__('__dataURL__', function(reader) {
 			reader.readAsDataURL(this);
 		});
 	};
 
 
 	File.prototype.readAsArrayBuffer = function() {
-		return this.__read__(function(reader) {
+		return this.__read__('__buffer__', function(reader) {
 			reader.readAsArrayBuffer(this);
 		});
 	};
 
 
 	File.prototype.readAsText = function(label) {
-		return this.__read__(function(reader) {
+		return this.__read__('__text__', function(reader) {
 			reader.readAsText(this, label);
 		});
 	};
