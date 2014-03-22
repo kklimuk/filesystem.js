@@ -1,5 +1,5 @@
 # FileSystem.js
-FileSystem.js is a Promise-based wrapper library for the HTML5 FileSystem API. It smooths over the rough edges of the existing (FileSystem)[http://dev.w3.org/2009/dap/file-system/pub/FileSystem/] and (File)[http://dev.w3.org/2006/webapi/FileAPI/] APIs and makes it simple to reason about its inherent asynchronicity. It uses native Promises since these have finally arrived in the stable version of Chrome.
+FileSystem.js is a Promise-based wrapper library for the HTML5 FileSystem API. It smooths over the rough edges of the existing [FileSystem](http://dev.w3.org/2009/dap/file-system/pub/FileSystem/) and [File](http://dev.w3.org/2006/webapi/FileAPI/) APIs and makes it simple to reason about its inherent asynchronicity. It uses native Promises since these have finally arrived in the stable version of Chrome.
 
 ## Supported Browsers
 - Chrome
