@@ -152,7 +152,7 @@ Entry.prototype.remove()
 ```
 - Returns: a promise that yields nothing after the entry is removed.
 
-### DirectoryEntry
+### DirectoryEntry < Entry
 ```javascript
 DirectoryEntry.prototype.getFileEntry(path[, options])
 ```
@@ -195,7 +195,7 @@ DirectoryEntry.prototype.readEntries()
 ```
 - Returns: a promise that yields an array of entries contained in the directory.
 
-### FileEntry
+### FileEntry < Entry
 ```javascript
 FileEntry.prototype.getFile()
 ```
