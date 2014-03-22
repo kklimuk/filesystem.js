@@ -71,12 +71,12 @@ fs.getRoot().then(function(root) {
 ## API
 ### FileSystem
 ```javascript
-new FileSystem(minimumSize, type)
+new FileSystem([minimumSize, type])
 ```
 - Returns: a promise like object that wraps the filesystem.
 - Parameters:
-	- `minimumSize` - size in bytes for the browser file system
-	- `type` - either PERSISTENT or TEMPORARY
+	- `minimumSize` - size in bytes for the browser file system (5MB by default).
+	- `type` - either PERSISTENT or TEMPORARY (PERSISTENT by default).
 
 ```javascript
 FileSystem.prototype.getRoot()
