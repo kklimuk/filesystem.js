@@ -7,19 +7,25 @@ window.FileSystem = (function(navigator, Promise) {
 		this.type = type || window.PERSISTENT;
 
 		this.promise = new Promise(this.__init__.bind(this));
-		this.then = this.promise.then.bind(this.promise);
-		this.catch = this.promise.catch.bind(this.promise);
 	}
+
+	FileSystem.prototype.then = function(oncomplete, onerror) {
+		return this.promise.then.call(this.promise, oncomplete, onerror);
+	};
+
+	FileSystem.prototype.catch = function(onerror) {
+		return this.promise.catch.call(this.promise, onerror);
+	};
 
 	FileSystem.prototype.__init__ = function(resolve, reject) {
 		var self = this;
 		return self.getStatistics().then(function(stats) {
-			if (stats.quota < self.minimum_size) {
-				return self.requestQuota(self.minimum_size).then(function(quota) {
-					return self.__getBrowserFileSystem__(self.type, quota);
+			if (stats.allocated < self.minimum_size) {
+				return self.allocateSize(self.minimum_size).then(function(allocated) {
+					return self.__getBrowserFileSystem__(self.type, allocated);
 				});
 			}
-			return self.__getBrowserFileSystem__(self.type, stats.quota);
+			return self.__getBrowserFileSystem__(self.type, stats.allocated);
 		})
 		.then(function(fs) {
 			self.fs = fs;
@@ -107,8 +113,6 @@ window.FileSystem = (function(navigator, Promise) {
 			return new Promise(function(resolve, reject) { __remove__.call(that, resolve, reject); });
 		};
 
-		console.log(prototype);
-
 		return entry;
 	};
 
@@ -194,18 +198,18 @@ window.FileSystem = (function(navigator, Promise) {
 	var persistentStorage = navigator.persistentStorage || navigator.webkitPersistentStorage;
 	FileSystem.prototype.getStatistics = function() {
 		return new Promise(function(resolve, reject) {
-			persistentStorage.queryUsageAndQuota(function(usage, quota) {
+			persistentStorage.queryUsageAndQuota(function(usage, allocated) {
 				resolve({
 					usage: usage,
-					quota: quota
+					allocated: allocated
 				});
 			}, reject);
 		});
 	};
 
-	FileSystem.prototype.requestQuota = function(quota) {
+	FileSystem.prototype.allocateSize = function(size) {
 		return new Promise(function(resolve, reject) {
-			persistentStorage.requestQuota(quota, resolve, reject);
+			persistentStorage.requestQuota(size, resolve, reject);
 		});
 	};
 

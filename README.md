@@ -70,11 +70,43 @@ fs.getRoot().then(function(root) {
 
 ## API
 ### FileSystem
-- new FileSystem(minimumSize, type)
-	- A promise-like object that wraps the local file system. 
-	- **Parameters**:
-		- **minimumSize** - size in bytes for the browser file system
-		- **type** - either persistent(window.PERSISTENT == 1) or temporary(window.TEMPORARY == 0)
+```javascript
+new FileSystem(minimumSize, type)
+```
+- Returns: a promise like object that wraps the filesystem.
+- Parameters:
+	- `minimumSize` - size in bytes for the browser file system
+	- `type` - either PERSISTENT or TEMPORARY
+
+```javascript
+FileSystem.prototype.then(oncomplete, onerror)
+```
+- Returns: a promise that runs `oncomplete` when the filesystem is loaded, and `onerror` when an error occurs.
+- Parameters:
+	- `oncomplete(localfs)` - a function to run when load is complete.
+		- `localfs` - an object representing the W3C FileSystem.
+	- `onerror(error)` - a function to run when an error is thrown.
+		- `error` - the error that was thrown.
+
+```javascript
+FileSystem.prototype.catch(onerror)
+```
+- Returns: a promise that runs `onerror` when an error occurs.
+- Parameters:
+	- `onerror(error)` - a function to run when an error is thrown.
+		- `error` - the error that was thrown.
+
+```javascript
+FileSystem.prototype.getStatistics()
+```
+- Returns: a promise that will yield an object of the form `{ usage: [usage in bytes], allocated: [allocated space in bytes]}` when it completes.
+
+```javascript
+FileSystem.prototype.allocateSize(size)
+```
+- Returns: a promise that will yield the new filesystem size in bytes.
+- Parameters:
+	- `size` - the desired filesystem size
 
 ## License MIT
 Copyright (c) 2014 Kirill Klimuk
