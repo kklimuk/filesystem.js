@@ -152,6 +152,49 @@ Entry.prototype.remove()
 ```
 - Returns: a promise that yields nothing after the entry is removed.
 
+### DirectoryEntry
+```javascript
+DirectoryEntry.prototype.getFileEntry(path[, options])
+```
+- Returns: a promise that yields the FileEntry.
+- Parameters:
+	- `path` - a string that represents the path to the FileEntry.
+	- `options` - [see reference](http://dev.w3.org/2009/dap/file-system/pub/FileSystem/#widl-DirectoryEntry-getFile-void-DOMString-path-Flags-options-EntryCallback-successCallback-ErrorCallback-errorCallback).
+
+```javascript
+DirectoryEntry.prototype.makeFileEntry(path[, exclusive])
+```
+- Returns: a promise that yields the created FileEntry.
+- Parameters:
+	- `path` - a string that represents the path to the new FileEntry.
+	- `exclusive` - if false, will overwrite an existing FileEntry with the same path; otherwise, will throw an error if a FileEntry with the same path exists.
+
+```javascript
+DirectoryEntry.prototype.getDirectoryEntry(path[, options])
+```
+- Returns: a promise that yields the DirectoryEntry.
+- Parameters:
+	- `path` - a string that represents the path to the DirectoryEntry.
+	- `options` - [see reference](http://dev.w3.org/2009/dap/file-system/pub/FileSystem/#widl-DirectoryEntry-getFile-void-DOMString-path-Flags-options-EntryCallback-successCallback-ErrorCallback-errorCallback).
+
+```javascript
+DirectoryEntry.prototype.makeDirectoryEntry(path[, exclusive])
+```
+- Returns: a promise that yields the created DirectoryEntry.
+- Parameters:
+	- `path` - a string that represents the path to the new DirectoryEntry.
+	- `exclusive` - if false, will overwrite an existing DirectoryEntry with the same path; otherwise, will throw an error if a DirectoryEntry with the same path exists.
+
+```javascript
+DirectoryEntry.prototype.removeRecursively()
+```
+- Returns: a promise that yields nothing after the DirectoryEntry is removed.
+
+```javascript
+DirectoryEntry.prototype.readEntries()
+```
+- Returns: a promise that yields an array of entries contained in the directory.
+
 ### FileEntry
 ```javascript
 FileEntry.prototype.getFile()
@@ -170,48 +213,21 @@ FileEntry.prototype.createWriter()
 ```
 - Returns: a promise that yields a FileWriter for writing to the underlying file. Allows for more granular control of writing, such as appending.
 
-### DirectoryEntry
+### File
 ```javascript
-DirectoryEntry.prototype.getFileEntry(path[, options])
+File.prototype.readAsDataURL()
 ```
-- Returns: a promise that yields the FileEntry.
-- Parameters:
-	- `path` - a string that represents the path to the FileEntry.
-	- `options` - [see reference](http://dev.w3.org/2009/dap/file-system/pub/FileSystem/#widl-DirectoryEntry-getFile-void-DOMString-path-Flags-options-EntryCallback-successCallback-ErrorCallback-errorCallback).
+- Returns: a promise that yields the data url for the File.
 
 ```javascript
-DirectoryEntry.prototype.makeFileEntry(path[, exclusive])
+File.prototype.readAsArrayBuffer()
 ```
-- Returns: a promise that yields the created FileEntry.
-- Parameters:
-	- `path` - a string that represents the path to the new FileEntry.
-	- `exlusive` - if false, will overwrite an existing FileEntry with the same path; otherwise, will throw an error if a FileEntry with the same path exists.
+- Returns: a promise that yields the array buffer for the File.
 
 ```javascript
-DirectoryEntry.prototype.getDirectoryEntry(path[, options])
+File.prototype.readAsText()
 ```
-- Returns: a promise that yields the DirectoryEntry.
-- Parameters:
-	- `path` - a string that represents the path to the DirectoryEntry.
-	- `options` - [see reference](http://dev.w3.org/2009/dap/file-system/pub/FileSystem/#widl-DirectoryEntry-getFile-void-DOMString-path-Flags-options-EntryCallback-successCallback-ErrorCallback-errorCallback).
-
-```javascript
-DirectoryEntry.prototype.makeDirectoryEntry(path[, exclusive])
-```
-- Returns: a promise that yields the created DirectoryEntry.
-- Parameters:
-	- `path` - a string that represents the path to the new DirectoryEntry.
-	- `exlusive` - if false, will overwrite an existing DirectoryEntry with the same path; otherwise, will throw an error if a DirectoryEntry with the same path exists.
-
-```javascript
-DirectoryEntry.prototype.removeRecursively()
-```
-- Returns: a promise that yields nothing after the DirectoryEntry is removed.
-
-```javascript
-DirectoryEntry.prototype.readEntries()
-```
-- Returns: a promise that yields an array of entries contained in the directory.
+- Returns: a promise that yields the string for the File.
 
 ## License MIT
 Copyright (c) 2014 Kirill Klimuk
