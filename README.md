@@ -79,6 +79,30 @@ new FileSystem(minimumSize, type)
 	- `type` - either PERSISTENT or TEMPORARY
 
 ```javascript
+FileSystem.prototype.getRoot()
+```
+- Returns: a promise that will yield the DirectoryEntry for the root directory.
+
+```javascript
+FileSystem.prototype.getURL(url)
+```
+- Returns: a promise that will yield the Entry represented by the URL.
+- Parameters:
+	- `url` - the absolute URL that references an entry in the filesystem.
+
+```javascript
+FileSystem.prototype.getStatistics()
+```
+- Returns: a promise that will yield an object of the form `{ usage: [usage in bytes], allocated: [allocated space in bytes]}` when it completes.
+
+```javascript
+FileSystem.prototype.allocateSize(size)
+```
+- Returns: a promise that will yield the new filesystem size in bytes.
+- Parameters:
+	- `size` - the desired filesystem size in bytes.
+
+```javascript
 FileSystem.prototype.then(oncomplete, onerror)
 ```
 - Returns: a promise that runs `oncomplete` when the filesystem is loaded, and `onerror` when an error occurs.
@@ -95,18 +119,6 @@ FileSystem.prototype.catch(onerror)
 - Parameters:
 	- `onerror(error)` - a function to run when an error is thrown.
 		- `error` - the error that was thrown.
-
-```javascript
-FileSystem.prototype.getStatistics()
-```
-- Returns: a promise that will yield an object of the form `{ usage: [usage in bytes], allocated: [allocated space in bytes]}` when it completes.
-
-```javascript
-FileSystem.prototype.allocateSize(size)
-```
-- Returns: a promise that will yield the new filesystem size in bytes.
-- Parameters:
-	- `size` - the desired filesystem size in bytes.
 
 ### Entry
 ```javascript
@@ -138,7 +150,68 @@ Entry.prototype.getParent()
 ```javascript
 Entry.prototype.remove()
 ```
-- Returns: a promise that yields nothing when it completes.
+- Returns: a promise that yields nothing after the entry is removed.
+
+### FileEntry
+```javascript
+FileEntry.prototype.getFile()
+```
+- Returns: a promise that yields the File that the file entry stores.
+
+```javascript
+FileEntry.prototype.write(blob)
+```
+- Returns: a promise that yields the FileEntry that has been written to.
+- Parameters:
+	- `blob` - a Blob or File object to write to the FileEntry.
+
+```javascript
+FileEntry.prototype.createWriter()
+```
+- Returns: a promise that yields a FileWriter for writing to the underlying file. Allows for more granular control of writing, such as appending.
+
+### DirectoryEntry
+```javascript
+DirectoryEntry.prototype.getFileEntry(path[, options])
+```
+- Returns: a promise that yields the FileEntry.
+- Parameters:
+	- `path` - a string that represents the path to the FileEntry.
+	- `options` - [see reference](http://dev.w3.org/2009/dap/file-system/pub/FileSystem/#widl-DirectoryEntry-getFile-void-DOMString-path-Flags-options-EntryCallback-successCallback-ErrorCallback-errorCallback).
+
+```javascript
+DirectoryEntry.prototype.makeFileEntry(path[, exclusive])
+```
+- Returns: a promise that yields the created FileEntry.
+- Parameters:
+	- `path` - a string that represents the path to the new FileEntry.
+	- `exlusive` - if false, will overwrite an existing FileEntry with the same path; otherwise, will throw an error if a FileEntry with the same path exists.
+
+```javascript
+DirectoryEntry.prototype.getDirectoryEntry(path[, options])
+```
+- Returns: a promise that yields the DirectoryEntry.
+- Parameters:
+	- `path` - a string that represents the path to the DirectoryEntry.
+	- `options` - [see reference](http://dev.w3.org/2009/dap/file-system/pub/FileSystem/#widl-DirectoryEntry-getFile-void-DOMString-path-Flags-options-EntryCallback-successCallback-ErrorCallback-errorCallback).
+
+```javascript
+DirectoryEntry.prototype.makeDirectoryEntry(path[, exclusive])
+```
+- Returns: a promise that yields the created DirectoryEntry.
+- Parameters:
+	- `path` - a string that represents the path to the new DirectoryEntry.
+	- `exlusive` - if false, will overwrite an existing DirectoryEntry with the same path; otherwise, will throw an error if a DirectoryEntry with the same path exists.
+
+```javascript
+DirectoryEntry.prototype.removeRecursively()
+```
+- Returns: a promise that yields nothing after the DirectoryEntry is removed.
+
+```javascript
+DirectoryEntry.prototype.readEntries()
+```
+- Returns: a promise that yields an array of entries contained in the directory.
 
 ## License MIT
 Copyright (c) 2014 Kirill Klimuk
