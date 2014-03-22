@@ -106,7 +106,39 @@ FileSystem.prototype.allocateSize(size)
 ```
 - Returns: a promise that will yield the new filesystem size in bytes.
 - Parameters:
-	- `size` - the desired filesystem size
+	- `size` - the desired filesystem size in bytes.
+
+### Entry
+```javascript
+Entry.prototype.getMetadata()
+```
+- Returns: a promise that will yield an object of the form `{ modificationTime: [Date], size: [size in bytes] }` for the entry.
+
+```javascript
+Entry.prototype.moveTo(parent[, newName])
+```
+- Returns: a promise that will yield the moved entry when it completes.
+- Parameters:
+	- `parent` - DirectoryEntry to which the entry will be moved.
+	- `newName` - new name for entry (optional).
+
+```javascript
+Entry.prototype.copyTo(parent[, newName])
+```
+- Returns: a promise that will yield the copied entry when it completes.
+- Parameters:
+	- `parent` - DirectoryEntry to which the entry will be copied.
+	- `newName` - new name for entry (optional).
+
+```javascript
+Entry.prototype.getParent()
+```
+- Returns: a promise that will yield the parent directory when it completes.
+
+```javascript
+Entry.prototype.remove()
+```
+- Returns: a promise that yields nothing when it completes.
 
 ## License MIT
 Copyright (c) 2014 Kirill Klimuk
