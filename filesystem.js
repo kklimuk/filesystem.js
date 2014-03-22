@@ -21,7 +21,7 @@ window.FileSystem = (function(navigator, Promise) {
 		var self = this;
 		return self.getStatistics().then(function(stats) {
 			if (stats.allocated < self.minimum_size) {
-				return self.allocateSize(self.minimum_size).then(function(allocated) {
+				return self.allocate(self.minimum_size).then(function(allocated) {
 					return self.__getBrowserFileSystem__(self.type, allocated);
 				});
 			}
@@ -207,7 +207,7 @@ window.FileSystem = (function(navigator, Promise) {
 		});
 	};
 
-	FileSystem.prototype.allocateSize = function(size) {
+	FileSystem.prototype.allocate = function(size) {
 		return new Promise(function(resolve, reject) {
 			persistentStorage.requestQuota(size, resolve, reject);
 		});

@@ -96,7 +96,7 @@ FileSystem.prototype.getStatistics()
 - Returns: a promise that will yield an object of the form `{ usage: [usage in bytes], allocated: [allocated space in bytes]}` when it completes.
 
 ```javascript
-FileSystem.prototype.allocateSize(size)
+FileSystem.prototype.allocate(size)
 ```
 - Returns: a promise that will yield the new filesystem size in bytes.
 - Parameters:
