@@ -17,55 +17,55 @@ If you want to catch errors on the new filesystem object, it can be done as foll
 ### Examples
 #### Getting the root directory
 ```javascript
-	fs.getRoot().then(function(root) {
-		// do something with the root directory
-	})
+fs.getRoot().then(function(root) {
+	// do something with the root directory
+})
 ```
 #### Loading a filesystem url
 ```javascript
-	fs.getURL('[path]').then(function(entry) {
-		// do something with the directory or file
-	})
+fs.getURL('[path]').then(function(entry) {
+	// do something with the directory or file
+})
 ```
 #### Creating a directory
 ```javascript
-	fs.getRoot().then(function(root) {
-		root.makeDirectory('somedir');
-	}).then(function(directory) {
-		// do something with the created directory
-	})
+fs.getRoot().then(function(root) {
+	root.makeDirectory('somedir');
+}).then(function(directory) {
+	// do something with the created directory
+})
 ```
 #### Creating a file entry and writing to it in a directory
 ```javascript
-	fs.getURL('/somedir').then(function(directory) {
-		return directory.makeFileEntry('somefile.txt');
-	}).then(function(fileEntry) {
-		fileEntry.write(new Blob(['who are you?'],{ type: 'text/plaintext' }));
-	})
+fs.getURL('/somedir').then(function(directory) {
+	return directory.makeFileEntry('somefile.txt');
+}).then(function(fileEntry) {
+	fileEntry.write(new Blob(['who are you?'],{ type: 'text/plaintext' }));
+})
 ```
 #### Read all the files in a directory
 ```javascript
-	fs.getRoot().then(function(root) {
-		return root.readEntries();
-	}).then(function(entries) {
-		// do something with the entries which have just been read
-	})
+fs.getRoot().then(function(root) {
+	return root.readEntries();
+}).then(function(entries) {
+	// do something with the entries which have just been read
+})
 ```
 #### Read all of the ArrayBuffers for entries in a directory 
 ```javascript
-	fs.getRoot().then(function(root) {
-		return root.readEntries();
-	}).then(function(entries) {
-		var promises = [].map.call(entries, function(entry) {
-			return entry.getFile().then(function(file) {
-				return file.readAsArrayBuffer();
-			});
+fs.getRoot().then(function(root) {
+	return root.readEntries();
+}).then(function(entries) {
+	var promises = [].map.call(entries, function(entry) {
+		return entry.getFile().then(function(file) {
+			return file.readAsArrayBuffer();
 		});
+	});
 
-		return Promise.all(promises);
-	}).then(function(buffers) {
-		// do something with the array buffers
-	})
+	return Promise.all(promises);
+}).then(function(buffers) {
+	// do something with the array buffers
+})
 ```
 
 ## API
