@@ -47,7 +47,7 @@
 		fs.getRoot().then(function(root) {
 			return root.makeDirectory('foo');
 		}).then(function(directory) {
-			ok(directory.__removeRecursively__, "Promisified directory marker found.");
+			ok(directory.__modified__, "Promisified directory marker found.");
 			ok(!!~directory.name.indexOf('foo'), "Proper file name for directory.")
 			return fs.getURL('/foo');
 		}).then(function(directory) {
@@ -101,7 +101,7 @@
 		fs.getRoot().then(function(root) {
 			return root.makeFileEntry('bar.txt');
 		}).then(function(entry) {
-			ok(entry.__createWriter__, "Promisified file marker found.");
+			ok(entry.__modified__, "Promisified file marker found.");
 			ok(!!~entry.name.indexOf('bar.txt'), "Proper file name for file.")
 			return fs.getURL('/bar.txt');
 		}).then(function(entry) {

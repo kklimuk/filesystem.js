@@ -58,61 +58,76 @@ window.FileSystem = (function(navigator, Promise) {
 
 
 	FileSystem.prototype.__modifyEntryInterface__ = function(entry) {
-		var self = this;
-		entry.__getMetadata__ = entry.getMetadata;
-		entry.getMetadata = function() {
-			return new Promise(function(resolve, reject) { entry.__getMetadata__(resolve, reject) });
-		};
-
-		entry.__moveTo__ = entry.moveTo;
-		entry.moveTo = function(parent, newName) {
-			return new Promise(function(resolve, reject) {
-				entry.__moveTo__(parent, newName, self.makeEntryCallback(resolve), reject);
-			});
-		};
-
-		entry.__copyTo__ = entry.copyTo;
-		entry.copyTo = function(parent, newName) {
-			return new Promise(function(resolve, reject) {
-				entry.__copyTo__(parent, newName, self.makeEntryCallback(resolve), reject);
-			});
-		};
-
-		entry.__getParent__ = entry.getParent;
-		entry.getParent = function() {
-			return new Promise(function(resolve, reject) {
-				entry.__getParent__(self.makeEntryCallback(resolve), reject);
-			});
-		};
-
-		entry.__remove__ = entry.remove;
-		entry.remove = function() {
-			return new Promise(function(resolve, reject) { entry.__remove__(resolve, reject); });
-		};
-
-		if (entry.isDirectory) {
-			this.__modifyDirectoryInterface__(entry);
-		} else if (entry.isFile) {
-			this.__modifyFileInterface__(entry);
+		var prototype = entry.constructor.prototype,
+			self = this;
+		if (prototype.__modified__) {
+			return entry;
 		}
+
+		prototype.__modified__ = true;
+		if (entry.isDirectory) {
+			this.__modifyDirectoryInterface__(prototype, entry);
+		} else if (entry.isFile) {
+			this.__modifyFileInterface__(prototype, entry);
+		}
+
+		var __getMetadata__ = prototype.getMetadata;
+		prototype.getMetadata = function() {
+			var that = this;
+			return new Promise(function(resolve, reject) { __getMetadata__.call(that, resolve, reject) });
+		};
+
+		var __moveTo__ = prototype.moveTo;
+		prototype.moveTo = function(parent, newName) {
+			var that = this;
+			return new Promise(function(resolve, reject) {
+				__moveTo__.call(that, parent, newName, self.makeEntryCallback(resolve), reject);
+			});
+		};
+
+		var __copyTo__ = prototype.copyTo;
+		prototype.copyTo = function(parent, newName) {
+			var that = this;
+			return new Promise(function(resolve, reject) {
+				__copyTo__.call(that, parent, newName, self.makeEntryCallback(resolve), reject);
+			});
+		};
+
+		var __getParent__ = prototype.getParent;
+		entry.getParent = function() {
+			var that = this;
+			return new Promise(function(resolve, reject) {
+				__getParent__.call(that, self.makeEntryCallback(resolve), reject);
+			});
+		};
+
+		var __remove__ = prototype.remove;
+		entry.remove = function() {
+			var that = this;
+			return new Promise(function(resolve, reject) { __remove__.call(that, resolve, reject); });
+		};
+
+		console.log(prototype);
 
 		return entry;
 	};
 
-	FileSystem.prototype.__modifyFileInterface__ = function(entry) {
+	FileSystem.prototype.__modifyFileInterface__ = function(prototype, entry) {
 		var self = this;
 
-		entry.getFile = function() {
-			return new Promise(function(resolve, reject) { entry.file(self.makeEntryCallback(resolve), reject); });
+		prototype.getFile = function() {
+			var that = this;
+			return new Promise(function(resolve, reject) { that.file(self.makeEntryCallback(resolve), reject); });
 		};
 
-		entry.__createWriter__ = entry.createWriter;
-		entry.createWriter = function() {
-			return new Promise(function(resolve, reject) { entry.__createWriter__(resolve, reject); });
+		var __createWriter__ = prototype.createWriter;
+		prototype.createWriter = function() {
+			var that = this;
+			return new Promise(function(resolve, reject) { __createWriter__.call(that, resolve, reject); });
 		};
 
-		entry.write = function(blob) {
-			return entry.createWriter().then(function(writer) {
+		prototype.write = function(blob) {
+			return this.createWriter().then(function(writer) {
 				writer.write(blob);
 				return entry;
 			});
@@ -121,43 +136,46 @@ window.FileSystem = (function(navigator, Promise) {
 	};
 
 
-	FileSystem.prototype.__modifyDirectoryInterface__ = function(entry) {
+	FileSystem.prototype.__modifyDirectoryInterface__ = function(prototype, entry) {
 		var self = this;
 
-		entry.getFileEntry = function(path, options) {
+		prototype.getFileEntry = function(path, options) {
+			var that = this;
 			return new Promise(function(resolve, reject) {
-				entry.getFile(path, options, self.makeEntryCallback(resolve), reject);
+				that.getFile(path, options, self.makeEntryCallback(resolve), reject);
 			});
 		};
 
-		entry.makeFileEntry = function(path, exclusive) {
-			return entry.getFileEntry(path, {
+		prototype.makeFileEntry = function(path, exclusive) {
+			return this.getFileEntry(path, {
 				create: true,
 				exclusive: exclusive ? true : false
 			});
 		};
 
-		entry.__getDirectory__ = entry.getDirectory;
-		entry.getDirectory = function(path, options) {
+		var __getDirectory__ = prototype.getDirectory;
+		prototype.getDirectory = function(path, options) {
+			var that = this;
 			return new Promise(function(resolve, reject) {
-				entry.__getDirectory__(path, options, self.makeEntryCallback(resolve), reject);
+				__getDirectory__.call(that, path, options, self.makeEntryCallback(resolve), reject);
 			});
 		};
 
-		entry.makeDirectory = function(path, exclusive) {
-			return entry.getDirectory(path, {
+		prototype.makeDirectory = function(path, exclusive) {
+			return this.getDirectory(path, {
 				create: true,
 				exclusive: exclusive ? true : false
 			});
 		};
 
-		entry.__removeRecursively__ = entry.removeRecursively;
-		entry.removeRecursively = function() {
-			return new Promise(function(resolve, reject) { entry.__removeRecursively__(resolve, reject); });
+		var __removeRecursively__ = prototype.removeRecursively;
+		prototype.removeRecursively = function() {
+			var that = this;
+			return new Promise(function(resolve, reject) { __removeRecursively__.call(that, resolve, reject); });
 		};
 
-		entry.readEntries = function() {
-			var reader = entry.createReader();
+		prototype.readEntries = function() {
+			var reader = this.createReader();
 			return new Promise(function(resolve, reject) {
 				var results = [];
 				reader.readEntries(function getEntries(entries) {
