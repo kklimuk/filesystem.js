@@ -131,9 +131,13 @@ window.FileSystem = (function(navigator, Promise) {
 		};
 
 		prototype.write = function(blob) {
+			var self = this;
 			return this.createWriter().then(function(writer) {
 				writer.write(blob);
-				return entry;
+				return self.createWriter();
+			}).then(function(writer) {
+				writer.truncate(blob.size);
+				return self;
 			});
 		};
 
