@@ -100,7 +100,7 @@ window.FileSystem = (function(navigator, Promise) {
 		};
 
 		var __getParent__ = prototype.getParent;
-		entry.getParent = function() {
+		prototype.getParent = function() {
 			var that = this;
 			return new Promise(function(resolve, reject) {
 				__getParent__.call(that, self.makeEntryCallback(resolve), reject);
@@ -108,7 +108,7 @@ window.FileSystem = (function(navigator, Promise) {
 		};
 
 		var __remove__ = prototype.remove;
-		entry.remove = function() {
+		prototype.remove = function() {
 			var that = this;
 			return new Promise(function(resolve, reject) { __remove__.call(that, resolve, reject); });
 		};
