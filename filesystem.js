@@ -234,7 +234,7 @@ window.FileSystem = (function(navigator, Promise) {
 			var reader = new FileReader();
 
 			reader.onload = function(data) {
-				self[cache] = data;
+				self[cache] = data.target.result;
 				resolve(data);
 			};
 			reader.onerror = reject;
