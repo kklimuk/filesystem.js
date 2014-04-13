@@ -234,14 +234,12 @@ window.FileSystem = (function(navigator, Promise) {
 			var reader = new FileReader();
 
 			reader.onload = function(data) {
-				self[cache] = data.target.result;
-				resolve(data);
+				self[cache] = event.target.result;
+				resolve(self[cache]);
 			};
 			reader.onerror = reject;
 
 			func.call(self, reader);
-		}).then(function(event) {
-			return event.target.result;
 		});
 	};
 
